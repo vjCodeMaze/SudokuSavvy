@@ -7,23 +7,36 @@ class Main
     public static void main(String[] args)
     {
         Matrix matrix = new Matrix();
-        matrix.insert();
-        matrix.print(); 
-        while(!done)
+        while(matrix.play)
         {
-           matrix.move();
+            matrix.insert();
+            matrix.print(); 
+            while(!done)
+            {
+               matrix.move();
+            }
+             matrix.print();
+             matrix.identify();
         }
-        matrix.print();
-        matrix.identify();
     }
 }
 class Matrix
 {
      static Main m = new Main();
      static int[][] sudoko = new int[9][9];
+      static boolean play = true;
      Scanner scanner = new Scanner(System.in);
-     
-     // error in the logic of creating rand element at rand indexes
+     static boolean isComplete() 
+     {
+          for (int i = 0; i < 9; i++) {
+              for (int j = 0; j < 9; j++) {
+               if (sudoko[i][j] == 0) 
+                   return false;
+               }
+          }
+            return true;
+     }
+
      static boolean issafe(int row, int col, int val)
      {
          for(int i = 0; i<9; i++)
@@ -54,15 +67,12 @@ class Matrix
              if(issafe(row, col, val))
                  sudoko[row][col] = val;
              s++;
-            // sudoko[random.nextInt(9)][random.nextInt(9)] = random.nextInt(9)+1;
-            // s++;
-             
          }
      }
     void print()
     {
         System.out.printf("\t");
-        for(int i = 1; i<10; i++)
+        for(int i = 0; i<9; i++)
              System.out.printf("|%d|\t", i);
         System.out.println();
         for(int i = 0; i<9; i++)
@@ -75,77 +85,52 @@ class Matrix
             System.out.println();
         }
     }
-
-    static int verify()
+    void identify()
     {
-        int q = 0;
-         int temp = sudoko[q][0];
-        for(int i = q; i<++q; i++)
+        if(isComplete())
         {
-            // To traver the current row and column.
-            for(int j =0; j<9; j++)
-            {
-                if(temp == sudoko[i][j])
-                {
-                    m.error = true;
-                    return sudoko[i][j];
-                }
-                else if(temp == sudoko[j][i])
-                {
-                    m.error = true;
-                    return sudoko[i][j];
-                }
-                else if (!issafe(i, j, sudoko[i][j])) {
-                    m.error = true;
-                    return sudoko[i][j];
-                }
-
-            }
-        }
-        for(int i =q; i<2+q; i++)
-        {
-            for(int j = 0; j<2+q; j++)
-            {
-                if(q == sudoko[i][j])
-                {
-                     m.error = true;
-                     return sudoko[i][j];
-                }
-            }
-        }
-        return -1;
-    }
-    void identify() 
-    {
-        System.out.println("ERRORS ARE:");
-         for (int i = 0; i < 9; i++) {
+           System.out.println("ERRORS ARE:");
+           for (int i = 0; i < 9; i++) {
              for (int j = 0; j < 9; j++) {
                int val = sudoko[i][j];
                if (val != 0 && !issafe(i, j, val)) {
                 System.out.printf("Invalid value %d at (%d, %d)\n", val, i, j);
                 m.error = true;
                 }
-            }
+              }
+           }
+        }
+        else if(isComplete() && !m.error)
+        {
+            System.out.println("YOU WON THE GAME!");
+            System.out.println("Thanks for playing, wanna continue(true/false): ");
+             play = scanner.nextBoolean();
+        }
+        else
+        {
+        System.out.println("Game isn't Completed!");
+         play = false;
         }
     }
     void move()
     {
+        int user_moves = 0;
         int i, j, num;
-        System.out.printf("\nWanna QUIT(true): ");
-        m.done = scanner.nextBoolean();
         if(!m.done)
         {
              System.out.printf("\nEnter the element: ");
              num = scanner.nextInt();
-             System.out.printf("\nEnter the i'th and j'th column to add the element(true -> Quit): " );
+             System.out.printf("\nEnter the i'th and j'th column to add the element: " );
              i = scanner.nextInt();
              j = scanner.nextInt();
-             sudoko[i][j] = num;
-             // TO CHECK THE VALIDITY FOR EVERY MOVE:
-             // if(issafe(i, j, num))
-                //  sudoko[i][j] = num;
-              // else
-                // System.out.println("INVALID MOVE! ");
+             if(sudoko[i][j] == 0)
+             {
+                 sudoko[i][j] = num; user_moves++;
+             }
+             else
+                 System.out.println("Already filled: ");
+                 System.out.printf("\nWanna QUIT(true/false): ");
+                 m.done = scanner.nextBoolean();
         }
     }
 }
