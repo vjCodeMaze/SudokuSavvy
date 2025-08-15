@@ -28,3 +28,12 @@ Welcome to **JavaDoku**, a logic-driven Sudoku game built entirely in Java! This
 1. Clone the repository:
    ```bash
    git clone https://github.com/your-username/JavaDoku.git
+
+2. Compile and Run:
+     javac Main.java
+     java Main
+3. Sample Gameplay:
+     Enter the element: 5
+     Enter the i'th and j'th column to add the element: 2 3
+     Already filled:
+     Wanna QUIT(true/false): false
